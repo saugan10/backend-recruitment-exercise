@@ -1,0 +1,18 @@
+{
+  "version": "0.1",
+  "services": {
+    "s3": {
+      "enabled": true
+    },
+    "sqs": {
+      "enabled": true
+    },
+    "lambda": {
+      "enabled": true
+    }
+  },
+  "defaultRegion": "us-east-1",
+  "host": "localhost",
+  "port": 4566,
+  "debug": true
+}

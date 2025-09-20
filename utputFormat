@@ -1,0 +1,6 @@
+HTTP/1.1 307 Temporary Redirect
+date: Fri, 19 Sep 2025 09:11:21 GMT
+server: uvicorn
+content-length: 0
+location: http://localhost:8080/pdf/documents
+

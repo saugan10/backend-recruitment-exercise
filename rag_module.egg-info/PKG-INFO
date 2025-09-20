@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: rag_module
+Version: 0.1
+Requires-Dist: fastapi
+Requires-Dist: uvicorn
+Requires-Dist: pinecone-client==3.2.2
+Requires-Dist: google-generativeai
+Requires-Dist: langchain
+Requires-Dist: langchain-text-splitters
+Requires-Dist: python-dotenv
+Requires-Dist: pytest
+Requires-Dist: httpx
+Dynamic: requires-dist

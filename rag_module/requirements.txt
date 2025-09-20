@@ -1,0 +1,9 @@
+# rag_module/requirements.txt
+
+fastapi
+uvicorn
+pinecone-client==3.2.2
+google-generativeai
+langchain
+langchain-text-splitters
+python-dotenv

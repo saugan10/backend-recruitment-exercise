@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  pdf_service:
+    build:
+      context: ./pdf_service
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./storage/pdfs:/app/storage/pdfs
+    environment:
+      - PDF_STORAGE_PATH=/app/storage/pdfs
+    networks:
+      - backend_network
+
+  rag_module:
+    build:
+      context: ./rag_module
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    environment:
+      # Prefer Gemini. Either set GEMINI_API_KEY or keep GOOGLE_API_KEY for backward compatibility.
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      # Gemini model configuration (override as needed)
+      - GEMINI_GEN_MODEL=${GEMINI_GEN_MODEL:-gemini-1.5-flash}
+      - GEMINI_EMBED_MODEL=${GEMINI_EMBED_MODEL:-models/text-embedding-004}
+      # Vector DB (Pinecone) configuration
+      - PINECONE_API_KEY=${PINECONE_API_KEY}
+      - PINECONE_INDEX=${PINECONE_INDEX}
+      - PINECONE_DIM=${PINECONE_DIM:-768}
+      # PDF service base URL inside Compose network
+      - PDF_SERVICE_BASE_URL=http://pdf_service:8000
+      # Metrics endpoint (optional)
+      - METRICS_LAMBDA_URL=http://localstack:4566/lambda/metrics
+    depends_on:
+      - localstack
+    networks:
+      - backend_network
+
+  aws_service:
+    build:
+      context: ./aws_service
+      dockerfile: Dockerfile
+    ports:
+      - "8002:8002"
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_REGION=us-east-1
+      - DYNAMODB_TABLE_DOCUMENTS=DocumentsMetadata
+      - S3_BUCKET=my-pdf-storage
+      - RAG_BASE_URL=http://rag_module:8001
+      - METRICS_LAMBDA=AgentMetricsLogger
+    depends_on:
+      - localstack
+      - rag_module
+    networks:
+      - backend_network
+
+  localstack:
+    image: localstack/localstack:latest
+    ports:
+      - "4566:4566"   # LocalStack edge port
+      - "4571:4571"   # LocalStack edge port for CloudFormation
+    environment:
+      - SERVICES=s3,dynamodb,lambda
+      - DEFAULT_REGION=us-east-1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - LAMBDA_EXECUTOR=docker
+      - LAMBDA_REMOTE_DOCKER=true
+      - DEBUG=1
+    volumes:
+      - ./localstack:/docker-entrypoint-initaws.d  # Mount init scripts
+      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - backend_network
+
+networks:
+  backend_network:
+    driver: bridge

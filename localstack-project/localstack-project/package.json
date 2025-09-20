@@ -1,0 +1,25 @@
+{
+  "name": "localstack-project",
+  "version": "1.0.0",
+  "description": "A project for local development and testing of AWS services using LocalStack.",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "jest",
+    "start": "docker-compose up",
+    "localstack:start": "localstack start",
+    "localstack:stop": "localstack stop"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1000.0",
+    "localstack-client": "^1.0.0"
+  },
+  "devDependencies": {
+    "jest": "^27.0.0",
+    "ts-jest": "^27.0.0",
+    "typescript": "^4.5.0"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node"
+  }
+}

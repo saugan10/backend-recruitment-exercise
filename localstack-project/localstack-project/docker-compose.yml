@@ -1,0 +1,16 @@
+localstack-project
+├── src
+│   ├── services
+│   │   ├── s3.ts
+│   │   ├── sqs.ts
+│   │   └── lambda.ts
+│   ├── tests
+│   │   └── integration
+│   │       └── services.test.ts
+│   └── utils
+│       └── localstack-client.ts
+├── docker-compose.yml
+├── localstack-config.json
+├── package.json
+├── tsconfig.json
+└── README.md

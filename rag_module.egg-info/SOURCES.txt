@@ -1,0 +1,12 @@
+README.md
+setup.py
+pdf_service/__init__.py
+pdf_service/app.py
+rag_module/__init__.py
+rag_module/main.py
+rag_module/services.py
+rag_module.egg-info/PKG-INFO
+rag_module.egg-info/SOURCES.txt
+rag_module.egg-info/dependency_links.txt
+rag_module.egg-info/requires.txt
+rag_module.egg-info/top_level.txt
